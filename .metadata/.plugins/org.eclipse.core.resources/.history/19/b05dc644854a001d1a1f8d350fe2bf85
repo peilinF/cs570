@@ -1,0 +1,19 @@
+package hw3;
+
+import java.util.ArrayList;
+
+public class IDLList<E> {
+	private Node<E> head;
+	private Node<E> tail;
+	private int size;
+	private ArrayList<Node<E>> indices;
+	public IDLList() {
+		
+	}
+	
+	private class Node<E> {
+		
+		
+	}
+
+}
