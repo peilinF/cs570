@@ -14,31 +14,55 @@ public class IDLList<E> {
 		size = 0;
 	}
 	
-	public boolean add (int index, E elem) {
-		if ( index > indices.size() - 1) {
-			return false;
+	public boolean add (int index, E elem) throws Exception {
+		if ( index > indices.size()) {
+			throw new Exception("index out of bound");
 		}
 		Node<E> node = new Node<E>(elem);
 		indices.add(index, node);
-		Node<E> nextNode = indices.get(index + 1);
-		node.next = nextNode;
-		nextNode.prev = node;
-		Node<E> prevNode = indices.get(index -1);
-		node.prev = prevNode;
-		prevNode.next = node;
+		if (index != 0 && index != indices.size() - 1) {
+			
+			Node<E> nextNode = indices.get(index + 1);
+			node.next = nextNode;
+			nextNode.prev = node;
+			Node<E> prevNode = indices.get(index -1);
+			node.prev = prevNode;
+			prevNode.next = node;
+		} else if (index == 0) {
+			node.next = indices.get(1);
+			indices.get(1).prev = node;
+		} else {
+			node.prev = indices.get(index - 1);
+			indices.get(index - 1).next = node;
+		}
 		
 		head = indices.get(0);
 		tail = indices.get(indices.size() - 1);
 		return true;
 	}
+	
 	public boolean add(E elem) {
 		Node<E> node = new Node<E>(elem);
 		node.next = head;
 		head = node;
-		node.prev = node;
+		node.prev = null;
 		indices.add(0, node);
 		tail = indices.get(indices.size() - 1);
 		return true;
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("[");
+		Node<E> newHead = head;
+		while (newHead.next != null) {
+			sb.append(String.valueOf(newHead.data));
+			sb.append(" ");
+			newHead = newHead.next;
+		}
+		sb.append(String.valueOf(newHead.data));
+		sb.append("]");
+		return sb.toString();
 	}
 	
 	private class Node<E> {
@@ -59,5 +83,6 @@ public class IDLList<E> {
 		}
 		
 	}
+	
 
 }
