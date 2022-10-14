@@ -1,0 +1,12 @@
+package hw3;
+
+public class hw3 {
+	
+	public static void main (String[] args) throws Exception {
+		IDLList<Integer> a = new IDLList<Integer>();
+		a.add(1);
+		a.add(2);
+		a.add(0,0);
+		System.out.println(a);
+	}
+}

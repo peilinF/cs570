@@ -1,0 +1,141 @@
+package hw3;
+
+import java.util.ArrayList;
+
+public class IDLList<E> {
+	private Node<E> head;
+	private Node<E> tail;
+	private int size;
+	private ArrayList<Node<E>> indices;
+	public IDLList() {
+		indices = new ArrayList<Node<E>>();
+		head = null;
+		tail = null;
+		size = 0;
+	}
+	
+	public boolean add (int index, E elem) throws Exception {
+		if ( index > indices.size()) {
+			throw new Exception("index out of bound");
+		}
+		Node<E> node = new Node<E>(elem);
+		indices.add(index, node);
+		if (index != 0 && index != indices.size() - 1) {
+			
+			Node<E> nextNode = indices.get(index + 1);
+			node.next = nextNode;
+			nextNode.prev = node;
+			Node<E> prevNode = indices.get(index -1);
+			node.prev = prevNode;
+			prevNode.next = node;
+		} else if (index == 0 && indices.size() > 1) {
+			node.next = indices.get(1);
+			indices.get(1).prev = node;
+		} else if ( index == indices.size() - 1 && indices.size() > 1){
+			node.prev = indices.get(index - 1);
+			indices.get(index - 1).next = node;
+		}
+		
+		head = indices.get(0);
+		tail = indices.get(indices.size() - 1);
+		return true;
+	}
+	
+	public boolean add(E elem) {
+		Node<E> node = new Node<E>(elem);
+		node.next = head;
+		head = node;
+		node.prev = null;
+		indices.add(0, node);
+		tail = indices.get(indices.size() - 1);
+		return true;
+	}
+	
+	public boolean append (E elem) {
+		Node<E> node = new Node<E>(elem);
+		tail.next = node;
+		tail = node;
+		indices.add(indices.size(), node);
+		tail.prev = indices.get(indices.size() - 2);
+		indices.get(indices.size() - 2).next = tail;
+		return true;
+	}
+	
+	public E getHead() {
+		return head.data;
+	}
+	public E getLast() {
+		return tail.data;
+	}
+	
+	public int size() {
+		return indices.size();
+	}
+	
+	public E remove() {
+		Node<E> remove = head;
+		head = head.next;
+		head.prev = null;
+		indices.remove(0);
+		return remove.data;
+	}
+	
+	public E removeLast() {
+		Node<E> remove = tail;
+		tail = tail.prev;
+		tail.next = null;
+		indices.remove(indices.size() - 1);
+		E data = remove.data;
+		remove = null;
+		return data;
+	}
+	
+	public E removeAt(int index) {
+		if ( index == 0) {
+			return remove();
+		} else if (index == indices.size() - 1) {
+			return removeLast();
+		}
+		Node<E> remove = indices.get(index);
+		Node<E> prev = remove.prev;
+		Node<E> next = remove.next;
+		prev.next = next;
+		next.prev = prev;
+		return remove.data;
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("[");
+		Node<E> newHead = head;
+		while (newHead.next != null) {
+			sb.append(String.valueOf(newHead.data)+ ",");
+			sb.append(" ");
+			newHead = newHead.next;
+		}
+		sb.append(String.valueOf(newHead.data));
+		sb.append("]");
+		return sb.toString();
+	}
+	
+	private class Node<E> {
+		E data;
+		Node<E> next;
+		Node<E> prev;
+		
+		Node(E data) {
+			this.data = data;
+			next = null;
+			prev = null;
+		}
+		
+		Node(E data, Node<E> prev, Node<E> next) {
+			this.data = data;
+			this.prev = prev;
+			this.next = next;
+		}
+		
+	}
+	
+
+}
